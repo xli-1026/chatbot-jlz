@@ -16,6 +16,7 @@ from redis import Redis
 from chatbot.config import settings
 from chatbot.routers import router
 from chatbot.utils import UserIdHeader
+from chatbot.vector_store_router import router as vector_store_router
 
 
 # TODO: should separate redis cache and storage instance
@@ -31,6 +32,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 app.include_router(router)
+app.include_router(vector_store_router)
 
 
 @app.get("/api/healthz")

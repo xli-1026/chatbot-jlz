@@ -45,7 +45,6 @@ def get_message_history() -> RedisChatMessageHistory:
 
 def get_llm() -> BaseLLM:
     return HuggingFaceTextGenInference(
-        # inference_server_url="http://127.0.0.1:8080",
         inference_server_url=str(settings.inference_server_url),
         stop_sequences=["</s>", f"{human_prefix}:"],
         streaming=True,
@@ -117,7 +116,7 @@ async def delete_conversation(
     await Conversation.delete(conversation_id)
 
 
-@router.websocket("/chat")
+@router.websocket("/_chat")
 async def generate(
     websocket: WebSocket,
     llm: Annotated[BaseLLM, Depends(get_llm)],
