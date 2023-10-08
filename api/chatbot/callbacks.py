@@ -98,7 +98,7 @@ class StreamingLLMCallbackHandler(AsyncCallbackHandler):
 class UpdateConversationCallbackHandler(AsyncCallbackHandler):
     def __init__(self, conversation_id: str):
         self.conversation_id: str = conversation_id
-
+ 
     async def on_chain_end(
         self,
         outputs: Dict[str, Any],

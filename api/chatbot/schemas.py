@@ -51,7 +51,7 @@ class ChatMessage(BaseModel):
         self, by_alias: bool = True, exclude_none: bool = True, **kwargs
     ) -> dict[str, Any]:
         return super().model_dump(
-            by_alias=by_alias, exclude_none=exclude_none, **kwargs
+            by_alias=by_alias, mode="json", exclude_none=exclude_none, **kwargs
         )
 
     model_config = ConfigDict(populate_by_name=True)

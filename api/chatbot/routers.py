@@ -36,7 +36,7 @@ router = APIRouter(
 
 def get_message_history() -> RedisChatMessageHistory:
     return AppendSuffixHistory(
-        url=settings.redis_om_url,
+        url=str(settings.redis_om_url),
         user_suffix=human_suffix,
         ai_suffix=ai_suffix,
         session_id="sid",  # a fake session id as it is required
@@ -45,20 +45,23 @@ def get_message_history() -> RedisChatMessageHistory:
 
 def get_llm() -> BaseLLM:
     return HuggingFaceTextGenInference(
-        inference_server_url=settings.inference_server_url,
+        # inference_server_url="http://127.0.0.1:8080",
+        inference_server_url=str(settings.inference_server_url),
         stop_sequences=["</s>", f"{human_prefix}:"],
         streaming=True,
     )
 
 
-@router.get("/conversations", response_model=list[Conversation])
+# @router.get("/conversations", response_model=list[Conversation])
+@router.get("/conversations")
 async def get_conversations(userid: Annotated[str | None, UserIdHeader()] = None):
     convs = await Conversation.find(Conversation.owner == userid).all()
     convs.sort(key=lambda x: x.updated_at, reverse=True)
     return convs
 
 
-@router.get("/conversations/{conversation_id}", response_model=ConversationDetail)
+# @router.get("/conversations/{conversation_id}", response_model=ConversationDetail)
+@router.get("/conversations/{conversation_id}")
 async def get_conversation(
     conversation_id: str,
     history: Annotated[RedisChatMessageHistory, Depends(get_message_history)],
@@ -87,7 +90,8 @@ async def get_conversation(
     )
 
 
-@router.post("/conversations", status_code=201, response_model=ConversationDetail)
+# @router.post("/conversations", status_code=201, response_model=ConversationDetail)
+@router.post("/conversations", status_code=201)
 async def create_conversation(userid: Annotated[str | None, UserIdHeader()] = None):
     conv = Conversation(title=f"New chat", owner=userid)
     await conv.save()

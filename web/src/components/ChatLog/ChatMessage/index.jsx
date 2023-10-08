@@ -37,7 +37,8 @@ const ChatMessage = (props) => {
    * @param {*} message
    */
   const botMessage = (message) => {
-    const msgFrom = message.from.toLowerCase();
+    const msg = message.from || "";
+    const msgFrom = msg.toLowerCase();
     return msgFrom === "ai" || msgFrom === "assistant";
   };
 
